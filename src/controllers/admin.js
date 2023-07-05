@@ -223,6 +223,23 @@ exports.getItemById = async (req, res) => {
   }
 };
 
+// const calculateCondition = (purchaseDate) => {
+//   const currentDate = new Date();
+//   const yearsSincePurchase =
+//     currentDate.getFullYear() - new Date(purchaseDate).getFullYear();
+//   const conditionPercentage = 100 - yearsSincePurchase * 10;
+
+//   if (conditionPercentage > 70) {
+//     return "SANGAT BAIK";
+//   } else if (conditionPercentage > 50) {
+//     return "BAIK";
+//   } else {
+//     return "HARUS DIGANTI";
+//   }
+// };
+
+// calculateCondition(requestItem.purchaseDate)
+
 exports.AddItem = async (req, res) => {
   try {
     const body = req.body;
@@ -233,9 +250,10 @@ exports.AddItem = async (req, res) => {
       ownershipId: joi.number().min(1).required(),
       locationId: joi.number().min(1).required(),
       qty: joi.number().min(1).required(),
-      status: joi.number().min(1).required(),
+      // status: joi.number().min(1).required(),
       purchaseDate: joi.date().required(),
     });
+
 
     const { error } = schema.validate(body);
 
@@ -259,7 +277,7 @@ exports.AddItem = async (req, res) => {
       ownershipId: body.ownershipId,
       locationId: body.locationId,
       qty: body.qty,
-      status: body.status,
+      // status: body.status,
       purchaseDate: body.purchaseDate,
     };
 
@@ -293,65 +311,6 @@ exports.AddItem = async (req, res) => {
   }
 };
 
-exports.getCategory = async (req, res) => {
-  try {
-    const datas = await category.findAll({
-      attributes: {
-        exclude: ["createdAt", "updatedAt"],
-      },
-    });
-
-
-    return res.json({ item: datas });
-
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({
-      message: "Internal server error",
-    });
-  }
-};
-
-
-exports.getOwnership = async (req, res) => {
-  try {
-    const datas = await ownership.findAll({
-      attributes: {
-        exclude: ["createdAt", "updatedAt"],
-      },
-    });
-
-
-    return res.json({ item: datas });
-
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({
-      message: "Internal server error",
-    });
-  }
-};
-
-exports.getLocation = async (req, res) => {
-  try {
-    const datas = await location.findAll({
-      attributes: {
-        exclude: ["createdAt", "updatedAt"],
-      },
-    });
-
-
-    return res.json({ item: datas });
-
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({
-      message: "Internal server error",
-    });
-  }
-};
-
-
 exports.editItem = async (req, res) => {
   try {
     const id = req.params.id;
@@ -364,7 +323,7 @@ exports.editItem = async (req, res) => {
       ownershipId: joi.number().min(1).required(),
       locationId: joi.number().min(1).required(),
       qty: joi.number().min(1).required(),
-      status: joi.number().min(1).required(),
+      // status: joi.number().min(1).required(),
       purchaseDate: joi.date().required()
     });
 
@@ -395,7 +354,7 @@ exports.editItem = async (req, res) => {
       ownershipId: body.ownershipId,
       locationId: body.locationId,
       qty: body.qty,
-      status: body.status,
+      // status: body.status,
       purchaseDate: body.purchaseDate,
     };
 
