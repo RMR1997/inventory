@@ -280,7 +280,14 @@ exports.AddItem = async (req, res) => {
       },
     });
 
-    const code = owner.ownershipCode;
+    const codeMerk = await code.findOne({
+      where: {
+        id: body.codeId
+      }
+    })
+
+    const codeOwner = owner.ownershipCode;
+    const merkCode = codeMerk.codeName;
 
     const requestItem = {
       itemName: body.itemName,
@@ -297,7 +304,6 @@ exports.AddItem = async (req, res) => {
     };
 
     const newItem = await item.create(requestItem);
-
     const response = newItem.id.toString();
 
     let itemId = response;
@@ -308,8 +314,10 @@ exports.AddItem = async (req, res) => {
       itemId = "00" + itemId;
     }
 
-    const ownershipCode = code + itemId;
+    const ownershipCode = merkCode + "-" + codeOwner + itemId;
     newItem.itemId = ownershipCode;
+
+    console.log("OWNERSHIP CODE: ", ownershipCode);
 
     await newItem.save();
 
