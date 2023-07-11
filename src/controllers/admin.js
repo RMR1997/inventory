@@ -1,7 +1,8 @@
-const { admin, category, item, location, ownership } = require("../../models");
+const { admin, category, item, location, ownership, asset, code } = require("../../models");
 const joi = require("joi");
 const bcrypt = require("bcrypt")
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
+
 
 
 exports.login = async (req, res) => {
@@ -148,6 +149,18 @@ exports.getAllItems = async (req, res) => {
             exclude: ["createdAt", "updatedAt"],
           },
         },
+        {
+          model: asset,
+          attributes: {
+            exclude: ["createdAt", "updatedAt"],
+          },
+        },
+        {
+          model: code,
+          attributes: {
+            exclude: ["createdAt", "updatedAt"],
+          },
+        },
       ],
       attributes: {
         exclude: ["createdAt", "updatedAt"],
@@ -198,6 +211,18 @@ exports.getItemById = async (req, res) => {
               exclude: ["createdAt", "updatedAt"],
             },
           },
+          {
+            model: asset,
+            attributes: {
+              exclude: ["createdAt", "updatedAt"],
+            },
+          },
+          {
+            model: code,
+            attributes: {
+              exclude: ["createdAt", "updatedAt"],
+            },
+          },
         ],
       });
 
@@ -223,34 +248,20 @@ exports.getItemById = async (req, res) => {
   }
 };
 
-// const calculateCondition = (purchaseDate) => {
-//   const currentDate = new Date();
-//   const yearsSincePurchase =
-//     currentDate.getFullYear() - new Date(purchaseDate).getFullYear();
-//   const conditionPercentage = 100 - yearsSincePurchase * 10;
-
-//   if (conditionPercentage > 70) {
-//     return "SANGAT BAIK";
-//   } else if (conditionPercentage > 50) {
-//     return "BAIK";
-//   } else {
-//     return "HARUS DIGANTI";
-//   }
-// };
-
-// calculateCondition(requestItem.purchaseDate)
-
 exports.AddItem = async (req, res) => {
   try {
     const body = req.body;
 
     const schema = joi.object({
-      itemName: joi.string().min(3).required(),
+      itemName: joi.string().min(1).required(),
+      merk: joi.string().min(1).required(),
+      codeId: joi.number().min(1).required(),
+      assetId: joi.number().min(1).required(),
       categoryId: joi.number().min(1).required(),
       ownershipId: joi.number().min(1).required(),
       locationId: joi.number().min(1).required(),
       qty: joi.number().min(1).required(),
-      // status: joi.number().min(1).required(),
+      price: joi.string().min(1).required(),
       purchaseDate: joi.date().required(),
     });
 
@@ -273,11 +284,15 @@ exports.AddItem = async (req, res) => {
 
     const requestItem = {
       itemName: body.itemName,
+      merk: body.merk,
+      codeId: body.codeId,
+      assetId: body.assetId,
       categoryId: body.categoryId,
       ownershipId: body.ownershipId,
       locationId: body.locationId,
       qty: body.qty,
-      // status: body.status,
+      price: body.price,
+      total: body.price * body.qty,
       purchaseDate: body.purchaseDate,
     };
 

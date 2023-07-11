@@ -10,37 +10,57 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       itemId: {
-        type: Sequelize.STRING,
-      },
-      itemName: {
         type: Sequelize.STRING
+      },
+      codeId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "codes",
+          key: "id"
+        }
+      },
+      assetId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "assets",
+          key: "id"
+        }
       },
       categoryId: {
         type: Sequelize.INTEGER,
         references: {
           model: "categories",
-          key:"id"
+          key: "id"
         }
       },
       ownershipId: {
         type: Sequelize.INTEGER,
         references: {
           model: "ownerships",
-          key:"id"
+          key: "id"
         }
       },
       locationId: {
         type: Sequelize.INTEGER,
         references: {
           model: "locations",
-          key:"id"
+          key: "id"
         }
+      },
+      itemName: {
+        type: Sequelize.STRING
+      },
+      merk: {
+        type: Sequelize.STRING
       },
       qty: {
         type: Sequelize.INTEGER
-      }, 
-      status: {
-        type: Sequelize.INTEGER
+      },
+      price: {
+        type: Sequelize.STRING
+      },
+      total: {
+        type: Sequelize.STRING
       },
       purchaseDate: {
         type: Sequelize.DATE
@@ -59,4 +79,3 @@ module.exports = {
     await queryInterface.dropTable('items');
   }
 };
-
