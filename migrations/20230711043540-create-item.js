@@ -12,13 +12,6 @@ module.exports = {
       itemId: {
         type: Sequelize.STRING
       },
-      codeId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "codes",
-          key: "id"
-        }
-      },
       assetId: {
         type: Sequelize.INTEGER,
         references: {

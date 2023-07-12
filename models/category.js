@@ -11,16 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      category.hasOne(models.item,{
+      category.hasOne(models.item, {
         foreignKey: "categoryId"
       })
     }
   }
   category.init({
-    categoryName: DataTypes.STRING
+    categoryName: DataTypes.STRING,
+    categoryCode: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'category',
+
   });
   return category;
 };

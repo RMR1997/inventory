@@ -47,6 +47,7 @@ exports.putCategory = async (req, res) => {
     try {
         const update = await category.update({
             categoryName: req.body.categoryName,
+            categoryCode: req.body.categoryCode,
 
         },
             {

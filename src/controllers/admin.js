@@ -1,4 +1,4 @@
-const { admin, category, item, location, ownership, asset, code } = require("../../models");
+const { admin, category, item, location, ownership, asset } = require("../../models");
 const joi = require("joi");
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
@@ -155,12 +155,6 @@ exports.getAllItems = async (req, res) => {
             exclude: ["createdAt", "updatedAt"],
           },
         },
-        {
-          model: code,
-          attributes: {
-            exclude: ["createdAt", "updatedAt"],
-          },
-        },
       ],
       attributes: {
         exclude: ["createdAt", "updatedAt"],
@@ -217,12 +211,6 @@ exports.getItemById = async (req, res) => {
               exclude: ["createdAt", "updatedAt"],
             },
           },
-          {
-            model: code,
-            attributes: {
-              exclude: ["createdAt", "updatedAt"],
-            },
-          },
         ],
       });
 
@@ -255,14 +243,13 @@ exports.AddItem = async (req, res) => {
     const schema = joi.object({
       itemName: joi.string().min(1).required(),
       merk: joi.string().min(1).required(),
-      codeId: joi.number().min(1).required(),
       assetId: joi.number().min(1).required(),
       categoryId: joi.number().min(1).required(),
       ownershipId: joi.number().min(1).required(),
       locationId: joi.number().min(1).required(),
       qty: joi.number().min(1).required(),
       price: joi.string().min(1).required(),
-      purchaseDate: joi.date().required(),
+      purchaseDate: joi.date()
     });
 
 
@@ -280,19 +267,18 @@ exports.AddItem = async (req, res) => {
       },
     });
 
-    const codeMerk = await code.findOne({
+    const categories = await category.findOne({
       where: {
-        id: body.codeId
+        id: body.categoryId
       }
     })
 
     const codeOwner = owner.ownershipCode;
-    const merkCode = codeMerk.codeName;
+    const codeCategory = categories.categoryCode;
 
     const requestItem = {
       itemName: body.itemName,
       merk: body.merk,
-      codeId: body.codeId,
       assetId: body.assetId,
       categoryId: body.categoryId,
       ownershipId: body.ownershipId,
@@ -314,7 +300,7 @@ exports.AddItem = async (req, res) => {
       itemId = "00" + itemId;
     }
 
-    const ownershipCode = merkCode + "-" + codeOwner + itemId;
+    const ownershipCode = codeCategory + "-" + codeOwner + itemId;
     newItem.itemId = ownershipCode;
 
     console.log("OWNERSHIP CODE: ", ownershipCode);
@@ -340,14 +326,17 @@ exports.editItem = async (req, res) => {
     const body = req.body;
 
     const schema = joi.object({
-      itemId: joi.string().min(4).required(),
-      itemName: joi.string().min(3).required(),
+      itemName: joi.string().min(1).required(),
+      itemId: joi.string().min(1).required(),
+      merk: joi.string().min(1).required(),
+      assetId: joi.number().min(1).required(),
       categoryId: joi.number().min(1).required(),
       ownershipId: joi.number().min(1).required(),
       locationId: joi.number().min(1).required(),
       qty: joi.number().min(1).required(),
-      // status: joi.number().min(1).required(),
-      purchaseDate: joi.date().required()
+      price: joi.string().min(1).required(),
+      total: joi.number().min(1).required(),
+      purchaseDate: joi.date()
     });
 
     const { error } = schema.validate(body);
@@ -371,13 +360,16 @@ exports.editItem = async (req, res) => {
 
 
     const requestItem = {
-      itemId: body.itemId,
       itemName: body.itemName,
+      itemId: body.itemId,
+      merk: body.merk,
+      assetId: body.assetId,
       categoryId: body.categoryId,
       ownershipId: body.ownershipId,
       locationId: body.locationId,
       qty: body.qty,
-      // status: body.status,
+      price: body.price,
+      total: body.price * body.qty,
       purchaseDate: body.purchaseDate,
     };
 
