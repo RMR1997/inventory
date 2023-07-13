@@ -2,6 +2,8 @@ const { admin, category, item, location, ownership, asset } = require("../../mod
 const joi = require("joi");
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
+const xlsx = require("xlsx");
+const fs = require("fs");
 
 
 
@@ -358,6 +360,20 @@ exports.editItem = async (req, res) => {
       })
     }
 
+    const owner = await ownership.findOne({
+      where: {
+        id: body.ownershipId,
+      },
+    });
+
+    const categories = await category.findOne({
+      where: {
+        id: body.categoryId
+      }
+    })
+
+    const codeOwner = owner.ownershipCode;
+    const codeCategory = categories.categoryCode;
 
     const requestItem = {
       itemName: body.itemName,
@@ -373,11 +389,28 @@ exports.editItem = async (req, res) => {
       purchaseDate: body.purchaseDate,
     };
 
-    await findItem.update(requestItem, {
+    const newItem = await findItem.update(requestItem, {
       where: {
         id
       }
     });
+
+    const response = newItem.id.toString();
+
+    let itemId = response;
+
+    if (itemId.length === 1) {
+      itemId = "000" + itemId;
+    } else if (itemId.length === 2) {
+      itemId = "00" + itemId;
+    }
+
+    const ownershipCode = codeCategory + "-" + codeOwner + itemId;
+    newItem.itemId = ownershipCode;
+
+    console.log("OWNERSHIP CODE: ", ownershipCode);
+
+    await newItem.save();
 
 
     return res.status(200).send({
@@ -414,3 +447,4 @@ exports.deleteItem = async (req, res) => {
     });
   }
 };
+

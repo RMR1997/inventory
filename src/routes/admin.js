@@ -12,6 +12,7 @@ router.put('/update/:id', AdminController.editItem)
 router.get('/get/:id', AdminController.getItemById)
 router.post('/post', AdminController.AddItem)
 router.delete('/delete/:id', AdminController.deleteItem)
+// router.get('/download', AdminController.downloadItemsExcel)
 
 
 
