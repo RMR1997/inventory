@@ -18,12 +18,14 @@ const ownershipRoutes = require("./src/routes/ownership")
 const locationRoutes = require("./src/routes/location")
 const categoryRoutes = require("./src/routes/category")
 const assetRoutes = require("./src/routes/asset")
+const statusRoutes = require("./src/routes/status")
 
 app.use('/', adminRoutes)
 app.use('/', ownershipRoutes)
 app.use('/', locationRoutes)
 app.use('/', categoryRoutes)
 app.use('/', assetRoutes)
+app.use('/', statusRoutes)
 
 
 

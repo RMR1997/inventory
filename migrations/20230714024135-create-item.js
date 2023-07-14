@@ -40,6 +40,13 @@ module.exports = {
           key: "id"
         }
       },
+      statusId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: "statuses",
+          key: "id"
+        }
+      },
       itemName: {
         type: Sequelize.STRING
       },

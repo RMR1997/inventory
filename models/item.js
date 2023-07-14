@@ -23,8 +23,9 @@ module.exports = (sequelize, DataTypes) => {
       item.belongsTo(models.location, {
         foreignKey: "locationId",
       })
-
-
+      item.belongsTo(models.status, {
+        foreignKey: "statusId",
+      })
     }
   }
   item.init({

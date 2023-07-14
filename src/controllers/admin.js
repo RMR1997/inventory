@@ -1,4 +1,4 @@
-const { admin, category, item, location, ownership, asset } = require("../../models");
+const { admin, category, item, location, ownership, asset, status } = require("../../models");
 const joi = require("joi");
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
@@ -157,6 +157,12 @@ exports.getAllItems = async (req, res) => {
             exclude: ["createdAt", "updatedAt"],
           },
         },
+        {
+          model: status,
+          attributes: {
+            exclude: ["createdAt", "updatedAt"],
+          },
+        },
       ],
       attributes: {
         exclude: ["createdAt", "updatedAt"],
@@ -213,6 +219,12 @@ exports.getItemById = async (req, res) => {
               exclude: ["createdAt", "updatedAt"],
             },
           },
+          {
+            model: status,
+            attributes: {
+              exclude: ["createdAt", "updatedAt"],
+            },
+          },
         ],
       });
 
@@ -249,6 +261,7 @@ exports.AddItem = async (req, res) => {
       categoryId: joi.number().min(1).required(),
       ownershipId: joi.number().min(1).required(),
       locationId: joi.number().min(1).required(),
+      statusId: joi.number().min(1).required(),
       qty: joi.number().min(1).required(),
       price: joi.string().min(1).required(),
       purchaseDate: joi.date()
@@ -285,6 +298,7 @@ exports.AddItem = async (req, res) => {
       categoryId: body.categoryId,
       ownershipId: body.ownershipId,
       locationId: body.locationId,
+      statusId: body.statusId,
       qty: body.qty,
       price: body.price,
       total: body.price * body.qty,
@@ -335,6 +349,7 @@ exports.editItem = async (req, res) => {
       categoryId: joi.number().min(1).required(),
       ownershipId: joi.number().min(1).required(),
       locationId: joi.number().min(1).required(),
+      statusId: joi.number().min(1).required(),
       qty: joi.number().min(1).required(),
       price: joi.string().min(1).required(),
       total: joi.number().min(1).required(),
@@ -383,6 +398,7 @@ exports.editItem = async (req, res) => {
       categoryId: body.categoryId,
       ownershipId: body.ownershipId,
       locationId: body.locationId,
+      statusId: body.statusId,
       qty: body.qty,
       price: body.price,
       total: body.price * body.qty,
